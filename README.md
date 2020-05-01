@@ -10,7 +10,7 @@ Set it as a dependency in you **__resource.lua** or **fxmanifest.lua**
 server_script '@async/async.lua'
 ```
 
-# USAGE
+## USAGE
 
 ```lua
 local tasks = {}
