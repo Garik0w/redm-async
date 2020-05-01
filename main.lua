@@ -110,9 +110,13 @@ Async.series = function(tasks, cb)
 end
 
 AddEventHandler('async:getSharedObject', function(cb)
-    cb(Async)
+	cb(Async)
 end)
 
 exports('getSharedObject', function()
-    return Async
+	return Async
 end)
+
+function getSharedObject()
+	return Async
+end
