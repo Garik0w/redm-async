@@ -3,7 +3,7 @@ Async = {
 	Tasks = {}
 }
 
-Async.parallel = function(tasks, cb)
+Async.Parallel = function(tasks, cb)
 	if (type(tasks) ~= 'table' or #tasks == 0) then
 		if(cb ~= nil) then cb({}) end
 		return
@@ -50,7 +50,7 @@ Async.parallel = function(tasks, cb)
 	end)
 end
 
-Async.parallelLimit = function(tasks, limit, cb)
+Async.ParallelLimit = function(tasks, limit, cb)
 	if (type(tasks) ~= 'table' or #tasks == 0) then
 		if(cb ~= nil) then cb({}) end
 		return
@@ -105,9 +105,94 @@ Async.parallelLimit = function(tasks, limit, cb)
     end)
 end
 
-Async.series = function(tasks, cb)
+Async.Series = function(tasks, cb)
 	Async.parallelLimit(tasks, 1, cb)
 end
+
+Async.CreatePool = function()
+    local self = {}
+
+    self.tasks = {}
+
+    self.add = function(func)
+        table.insert(self.tasks, func)
+    end
+
+    self.getTasks = function()
+        return self.tasks or {}
+    end
+
+    self.startParallelAsync = function(cb)
+        if (type(self.tasks) == 'table' and #self.tasks > 0) then
+            Async.parallel(self.tasks, cb)
+        else
+            cb({})
+        end
+    end
+
+    self.startParallel = function()
+        if (type(self.tasks) == 'table' and #self.tasks > 0) then
+            local done = false
+            local results = {}
+
+            Async.parallel(self.tasks, function(_results)
+                results = _results
+                done = true
+            end)
+
+            while done == false do
+                Citizen.Wait(0)
+            end
+
+            return results
+        else
+            return {}
+        end
+    end
+
+    self.startParallelLimitAsync = function(limit, cb)
+        if (type(self.tasks) == 'table' and #self.tasks > 0) then
+            Async.parallelLimit(self.tasks, limit, cb)
+        else
+            cb({})
+        end
+    end
+
+    self.startParallelLimit = function(limit)
+        if (type(self.tasks) == 'table' and #self.tasks > 0) then
+            local done = false
+            local results = {}
+
+            Async.parallelLimit(self.tasks, limit, function(_results)
+                results = _results
+                done = true
+            end)
+
+            while done == false do
+                Citizen.Wait(0)
+            end
+
+            return results
+        else
+            return {}
+        end
+    end
+
+    self.startSeriesAsync = function(cb)
+        self.startParallelLimitAsync(1, cb)
+    end
+
+    self.startSeries = function()
+        return self.startParallelLimit(1)
+    end
+
+    return self
+end
+
+Async.parallel = Async.Parallel
+Async.parallelLimit = Async.ParallelLimit
+Async.series = Async.Series
+Async.createPool = Async.CreatePool
 
 AddEventHandler('async:getSharedObject', function(cb)
 	cb(Async)
