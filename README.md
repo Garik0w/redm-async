@@ -1,17 +1,18 @@
-# fxserver-async
-Async utilities for FXServer
+# RedM Async
+![RedM-async](https://i.imgur.com/gIg0rcH.jpg)
+Async utilities for RedM
 
-[INSTALLATION]
+## INSTALLATION
 
-Set it as a dependency in you __resource.lua
+Set it as a dependency in you **__resource.lua** or **fxmanifest.lua**
 
-```
+```lua
 server_script '@async/async.lua'
 ```
 
-[USAGE]
+# USAGE
 
-```
+```lua
 local tasks = {}
 
 for i=1, 100, 1 do
@@ -33,14 +34,17 @@ for i=1, 100, 1 do
 end
 
 Async.parallel(tasks, function(results)
+	-- Trigger when all tasks are done
 	print(json.encode(results))
 end)
 
 Async.parallelLimit(tasks, 2, function(results)
+	-- Trigger when all tasks are done
 	print(json.encode(results))
 end)
 
 Async.series(tasks, function(results)
+	-- Trigger when all tasks are done
 	print(json.encode(results))
 end)
 
