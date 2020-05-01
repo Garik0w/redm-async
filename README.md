@@ -17,10 +17,7 @@ local asyncPool = Async.CreatePool()
 for i=1, 100, 1 do
 	asyncPool.add(function(cb)
 		SetTimeout(1000, function()
-
-			local result = math.random(1, 50000)
-
-			cb(result)
+			cb(math.random(1, 50000))
 		end)
 	end)
 end
