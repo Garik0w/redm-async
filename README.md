@@ -7,7 +7,17 @@ Async utilities for RedM
 Set it as a dependency in you **__resource.lua** or **fxmanifest.lua**
 
 ```lua
-server_script '@async/async.lua'
+-- client
+client_scripts {
+	'@async/async.lua',
+	...
+}
+
+-- server
+server_scripts {
+	'@async/async.lua',
+	...
+}
 ```
 
 ## USAGE NEW WAY
